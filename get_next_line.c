@@ -6,25 +6,32 @@
 /*   By: asmets <asmets@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 16:46:52 by asmets            #+#    #+#             */
-/*   Updated: 2014/11/13 16:49:51 by asmets           ###   ########.fr       */
+/*   Updated: 2014/11/16 22:50:07 by asmets           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <fcntl.h>
+#include <stdlib.h>
+
 #define BUFF_SIZE 100 // AJOUTER LES SECUS
 
-int get_next_line(int const fd, char **line);
+int get_next_line(int const fd, char **line)
 {	
-	char *tmp;
-	char buf; // buffer read
-	int ret; // retour de read
-	int	port_sortie;
+	int ret = 0;
+	char buff[BUFF_SIZE + 1]; // faire une allocation dynamique 
+	ret = read(fd, buff, BUFF_SIZE);
+	buff[ret] = '\0';
+	ft_putstr(buff);
 
-	port_sortie = open(fd, O_Rdonly);
-	buff = BUFF_SIZE + 1; // +1 = '\0' ou faire une allocation dynamique de memoire !! alors mettre free
-	buf[ret] = '\0';
-	ret = read (fd, buf,BUFF_SIZE)
-	
-	close(port_sortie);
 	return (0);
 }
 
+int main()
+{
+	char **line = malloc(100);
+	int  fd;
+	fd = open("texte.txt", O_RDONLY);
+	get_next_line(fd, line);
+	return (0);
+
+}
