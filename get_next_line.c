@@ -6,32 +6,41 @@
 /*   By: asmets <asmets@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 16:46:52 by asmets            #+#    #+#             */
-/*   Updated: 2014/11/16 22:50:07 by asmets           ###   ########.fr       */
+/*   Updated: 2014/11/17 04:17:46 by asmets           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fcntl.h>
 #include <stdlib.h>
-
-#define BUFF_SIZE 100 // AJOUTER LES SECUS
-
+#include <stdio.h>
+#include "Libft/libft.h"
+#define BUFF_SIZE 10000
+// AJOUTER LES SECUS
+//
 int get_next_line(int const fd, char **line)
 {	
-	int ret = 0;
-	char buff[BUFF_SIZE + 1]; // faire une allocation dynamique 
-	ret = read(fd, buff, BUFF_SIZE);
-	buff[ret] = '\0';
-	ft_putstr(buff);
+	char *buff;
+	int ret;
+	char *str;
+
+	buff = ft_strnew(BUFF_SIZE);
+	ret = 0;
+	while ((ret = read(fd, buff, BUFF_SIZE) && (ft_strchr(buff, '\n'))))
+	{
+		str = ft_strncpy(str, buf, ft_strchr(buff, '\n') - buff);
+		buff = ft_strchr(buff, '\n') + 1;
+	}
 
 	return (0);
 }
 
 int main()
 {
-	char **line = malloc(100);
+	char *line = (char *)malloc(sizeof(char )*  100000);
 	int  fd;
+
 	fd = open("texte.txt", O_RDONLY);
-	get_next_line(fd, line);
+	get_next_line(fd, &line);
 	return (0);
 
 }
