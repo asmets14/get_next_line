@@ -17,39 +17,39 @@
 #define BUFF_SIZE 10000
 
 
-// AJOUTER LES SECUS
 //
-int get_next_line(int const fd, char **line)
-{	
-	char *buff;
-	int ret;
+char manip(char *buf)
+{
 	char *str;
-	int i = 0;
-	int len = 0;
+	char *save;
+	int index;
+	int j;
 
-	buff = ft_strnew(BUFF_SIZE);
-	ret = 0;
-	while ((ret = read(fd, buff, BUFF_SIZE) && (ft_strchr(buff, '\n'))))
+	index = ft_strlen(str);
+	j = 0;
+	while(buf[j])
 	{
-		str = ft_strncpy(str, buff, (len =(ft_strchr(buff, '\n') - buff)));
-		buff = ft_strchr(buff, '\n') + 1;
-	}
-	while (i < len)
+	if(buf[index] == '\n')
 	{
-		i++;
+		save = ft_strcpy(save, buf + index)
 	}
-	str[i] = '\0';
-	ft_putstr(str);
-	ft_putstr("LLLLOOOOLLLL\n");
-	return (0);
+	str = ft_strnew(BUFF_SIZE + 1);
+	str[j]
+}
 }
 
-int main()
+int get_next_lineTEST(int const fd, char **line)
 {
-	char *line = (char *)malloc(sizeof(char *)*  100);
-	int  fd; 	
+	char static buf[BUFF_SIZE];
+//	int ret;
+//	int len;
 
-	fd = open("texte.txt", O_RDONLY);
-	get_next_line(fd, &line);
-	return (0);	
+
+	while((ret = read(fd, buf, BUFF_SIZE) > 0) // tant que ret n as pas fini de lire tout le fichier
+	{
+			manip(&buf);
+	}
+
+
+
 }

@@ -20,52 +20,47 @@
 //Check mes ligne;
 // Realloc 
 
-int nom(char *buf, )
+int nom(char *buf)
 {
 	int index;
 	int bufi;
-	//char *str;
+	char *str;
 	char *save;
+	int len = 0;
 
-	if(str)
-		bufi = ft_strlen(str);
+	
 	bufi = 0;
 
-	while (buf[bufi] != 0)
+	while (buf[bufi] != '\0')
 	{
-
+		
+		
 		index = 0;
 		str = ft_strnew(BUFF_SIZE + 1);
-		/*if(buf[bufi] != '\n')
-		{
-			while(buf[bufi] != '\n')
-			{
-			str[index] = buf[bufi];
-			index++;
-			bufi++;
-			}
-		
-			str[index++] = '\0';
-			ft_putstr(str);
-			ft_putstr("\t");
-			ft_putstr("1");
 
-		//	return (1);
-		}	
-		ft_putstr(buf);
-		*/
-		if(buf[bufi + 1] == '\n')
+		str[index] = buf[bufi];
+		index++;
+		bufi++;
+		ft_putstr(str);
+			
+
+		if(buf[bufi] == '\n')
 		{
-			ft_putstr("XXX");
+			ft_putstr(buf);
 			index = 0;
-			//str = ft_strnew(BUFF_SIZE + 1);
-			//save = ft_strcpy(save, buf + bufi);
+
+			save = ft_strnew(BUFF_SIZE + 1);
+			while(buf[bufi] != '\0')
+				save[len++] = buf[bufi++];
+			ft_putstr(save);
+			return (0);
+		}
 			//while(save[index] != '\n')
 			//index++;
 		//if(save[index] == '\0')
 			//	return (0);
 			//index = 0;
-			while(buf[bufi] != '\0')
+			/*while(save[index] != '\n')
 			{
 				str[index] = save[index]; 
 				index++;
@@ -76,11 +71,11 @@ int nom(char *buf, )
 			ft_putstr("\t");
 			ft_putstr("2");
 			return (1);
-		}
-		str[index++] = buf[bufi++];
-		if(buf[bufi] == '\0')
+		}*/
+	
+		/*if(buf[bufi] == '\0')
 			return(0);
-		return (1);
+		return (1);*/
 	}
 }
 
@@ -111,9 +106,7 @@ int get_next_lineTEST(int const fd, char **line)
 	while((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
 		nom(buf);
-		if(nom (buf) == 1)
-			nom(buf);	
-		return (0);
+		
 	}
 }
 int main()
@@ -123,7 +116,7 @@ int main()
 
 	fd = open("texte.txt", O_RDONLY);
 	get_next_lineTEST(fd, &line);
-	get_next_lineTEST(fd, &line);
+
 
 	
 	return (0);

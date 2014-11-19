@@ -14,42 +14,78 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "Libft/libft.h"
-#define BUFF_SIZE 10000
+#define BUFF_SIZE 1000
 
 
-// AJOUTER LES SECUS
-//
-int get_next_line(int const fd, char **line)
-{	
-	char *buff;
+//Check mes ligne;
+// Realloc 
+
+
+int get_next_lineTEST(int const fd, char **line)
+{
+	char static buf[BUFF_SIZE];
 	int ret;
+	int len;
+	int index;
+	char *save;
 	char *str;
-	int i = 0;
-	int len = 0;
+	*line = ft_strnew(BUFF_SIZE);
 
-	buff = ft_strnew(BUFF_SIZE);
-	ret = 0;
-	while ((ret = read(fd, buff, BUFF_SIZE) && (ft_strchr(buff, '\n'))))
+	while((ret = read(fd, buf, BUFF_SIZE)) && (ft_strchr(buf, '\n')))
 	{
-		str = ft_strncpy(str, buff, (len =(ft_strchr(buff, '\n') - buff)));
-		buff = ft_strchr(buff, '\n') + 1;
+		len = ((ft_strchr(buf, '\n')) - (&buf[0]));
+		str = ft_strnew(len);
+		
+
+		ft_putstr(buf);
+		index = 0;
+		while(index < len)
+		{
+			str[index] = buf[index];
+			index++;
+		}
+		str[index] ='\0';
+		//ft_putstr(str);
+		save = ft_strcpy(buf, buf + index);
+		
+		ft_putstr("\n");
+		ft_putstr(buf);
+
 	}
-	while (i < len)
+	// SI RET != 0 + Condition si la fin de str est = /0
+	if(buf[0] == '\n')
 	{
-		i++;
-	}
-	str[i] = '\0';
-	ft_putstr(str);
-	ft_putstr("LLLLOOOOLLLL\n");
+			
+		index = 0;
+		save = save + 1;
+
+			while(save[index] != '\n')
+				index++;
+			if(save[index] == '\0')
+				return (0);
+			
+			str = ft_strnew(index + 1);
+			index = 0;
+			while(save[index] != '\n')
+			{
+				str[index] = save[index];
+				index++;
+			}
+			str[index] = '\0';
+			//ft_putstr(str);
+}	
 	return (0);
 }
 
 int main()
 {
-	char *line = (char *)malloc(sizeof(char *)*  100);
-	int  fd; 	
+	char *line;
+	int fd;
 
 	fd = open("texte.txt", O_RDONLY);
-	get_next_line(fd, &line);
-	return (0);	
+	get_next_lineTEST(fd, &line);
+	
+
+	
+	return (0);
 }
