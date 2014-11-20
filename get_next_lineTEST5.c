@@ -6,118 +6,128 @@
 /*   By: asmets <asmets@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 16:46:52 by asmets            #+#    #+#             */
-/*   Updated: 2014/11/18 01:28:07 by asmets           ###   ########.fr       */
+/*   Updated: 2014/11/20 01:31:43 by asmets           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include "Libft/libft.h"
-#define BUFF_SIZE 1000
+#include "get_next_line.h"
 
-
-//Check mes ligne;
-// Realloc 
-
-int nom(char *buf)
-{
-	int index;
-	int bufi;
-	char *str;
-	char *save;
-	int len = 0;
-
-	
-	bufi = 0;
-
-	while (buf[bufi] != '\0')
+// FONCTION MANIPULATION DE BUF ET SAVE if(!nom)
+	void copy_buf_in_save(char *buf, t_gnlist *var)
 	{
-		
-		
-		index = 0;
-		str = ft_strnew(BUFF_SIZE + 1);
-
-		str[index] = buf[bufi];
-		index++;
-		bufi++;
-		ft_putstr(str);
-			
-
-		if(buf[bufi] == '\n')
+		var->bufi = 0;
+		var->len = 0;
+		var->save = ft_strnew(BUFF_SIZE + 1);
+		while (buf[var->bufi] != '\0')
 		{
-			ft_putstr(buf);
-			index = 0;
-
-			save = ft_strnew(BUFF_SIZE + 1);
-			while(buf[bufi] != '\0')
-				save[len++] = buf[bufi++];
-			ft_putstr(save);
-			return (0);
+			(var->save)[var->len] = (buf)[var->bufi];
+			(var->len)++;
+			(var->bufi)++;
 		}
-			//while(save[index] != '\n')
-			//index++;
-		//if(save[index] == '\0')
-			//	return (0);
-			//index = 0;
-			/*while(save[index] != '\n')
-			{
-				str[index] = save[index]; 
-				index++;
-				bufi++;
-			}
-			str[index] = '\0';
-			ft_putstr(str);
-			ft_putstr("\t");
-			ft_putstr("2");
-			return (1);
-		}*/
-	
-		/*if(buf[bufi] == '\0')
-			return(0);
-		return (1);*/
+		(var->save)[var->len] = '\0';
 	}
-}
+
+// FONCTION POUR LA PREMIERE FOIS if(!nom)
+	int manip_first(t_gnlist *var)
+	{
+		var->str = ft_strnew(BUFF_SIZE + 1);
+		var->index = 0;
+		while ((var->save)[var->index] != '\n')
+		{
+			(var->str)[var->j++] = (var->save)[var->index++];
+		}
+		ft_putstr(var->str);
+			if ((var->save)[var->index] != '\0')
+			return (1);
+		return (0);
+	}
+
+//FONCTION POUR LE RESTE if(nom == 1)
+	int good_line(t_gnlist *var)
+	{
+		if ((var->save)[var->index] == '\n')
+		{
+			(var->index)++;
+			free(var->str);
+			var->str = ft_strnew(BUFF_SIZE + 1);	
+			var->len = 0;
+			while ((var->save)[var->index] != '\n' || (var->save)[var->index] != '\0' )
+				(var->str)[var->len++] = (var->save)[var->index++];	
+			(var->str)[var->len++] = '\0';
+			//t_putstr(var->str);
+		}
+		if((var->save)[var->index] != '\0')
+			return (1);
+		return (0);
+	}
+
+	void sauvegarde(t_gnlist *var, char **tmp)
+	{
+		var->j = 0;
+		tmp[0] = ft_memalloc(BUFF_SIZE);
+		var->index++;
+		if ((var->save)[var->index] != '\0')
+		{
+			while((var->save)[var->index])
+			{
+				tmp[0][var->j] = (var->save)[var->index];
+				(var->save)[var->index++];
+				var->j++;
+			}
+		
+			free(var->save);
+			var->save = NULL;
+		}
+	}
 
 int get_next_lineTEST(int const fd, char **line)
 {
-	char static buf[BUFF_SIZE];
-	int ret;
+	t_gnlist var;
+	static char buf[BUFF_SIZE];
+	static char *tmp;
 
-	*line = ft_strnew(BUFF_SIZE); // NE PAS OUBLIER DE LE CHANGER AVEC STR
+	*line = ft_strnew(BUFF_SIZE);
+	var.retour = 0;
+	var.goodreturn = 0;
 
-	/*while((ret = read(fd, buf, BUFF_SIZE)) && (ft_strchr(buf, '\n')))
+	while((var.ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
-		len = ((ft_strchr(buf, '\n')) - (&buf[0]));
-		str = ft_strnew(len);
-		index = 0;
-		while(index < len)
+		if(tmp == NULL)
 		{
-			str[index] = buf[index];
-			index++;
-			
+			if(!(var.save)) // copy
+				copy_buf_in_save(buf, &var);
+			if(var.retour == 0 && var.save) // premiere fois
+				var.retour = manip_first(&var);
+			if(var.retour == 1)
+				sauvegarde(&var, &tmp);
+			ft_putstr(tmp);
 		}
-		str[index] ='\0';
-		ft_putstr(str);
-		save = ft_strcpy(buf, buf + index);
-
-	}*/
-
-	while((ret = read(fd, buf, BUFF_SIZE)) > 0)
-	{
-		nom(buf);
 		
+		else if(tmp) // autre
+		{
+			ft_putstr("XXX");
+			var.j = 0;
+			 while(tmp)
+			 {
+			 	(*(var.save)++) = *(tmp)++;
+			 }
+			 free(tmp);
+			 (var.save)[var.j++] = '\0';
+			 good_line(&var);
+			 if(var.goodreturn == 1)
+			 	sauvegarde(&var, &tmp);
+		}
 	}
+	return (0);
 }
-int main()
+
+void main()
 {
 	char *line;
 	int fd;
-
 	fd = open("texte.txt", O_RDONLY);
 	get_next_lineTEST(fd, &line);
+	ft_putstr("\n seconde \n");
+	get_next_lineTEST(fd, &line);
 
-
-	
-	return (0);
 }
