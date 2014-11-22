@@ -10,12 +10,20 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
-#include <fcntl.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include "Libft/libft.h"
-#define BUFF_SIZE 1000
+# include <fcntl.h>
+# include <stdlib.h>
+# include <stdio.h>
+# include "Libft/libft.h"
+
+# define RETURN_ERROR -1
+# define RETURN_EOF 0
+# define RETURN_LINE 1
+# define RETURN_CONCAT 2
+
+# define BUFF_SIZE 1
 
 typedef struct s_gnlist
 {
@@ -29,3 +37,5 @@ typedef struct s_gnlist
 	int		goodreturn;
 	int		ret;
 }				t_gnlist;
+
+#endif
