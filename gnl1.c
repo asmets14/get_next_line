@@ -6,7 +6,7 @@
 /*   By: asmets <asmets@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/13 16:46:52 by asmets            #+#    #+#             */
-/*   Updated: 2014/11/20 01:31:43 by asmets           ###   ########.fr       */
+/*   Updated: 2014/11/24 03:04:09 by asmets           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,45 @@
 
 /*      *((*tmp) + i[1]) == *(tmp[i[1]]) == tmp[0][i[1]] == **tmp      */
 
-int			string_swaper(char **buff, char **str)
+int			str_swaper(char **buff, char **str, size_t size, int enable)
 {
-	size_t	i[3];
+	char	*stmp;
+
+	if ((stmp = ft_strnew(size)) == NULL)
+		return (0);
+	if (*str)
+		stmp = ft_strcpy(stmp, *str);
+	if (enable)
+	{
+		free(*str);
+		*str = NULL;
+	}
+	*str = stmp;
+	return (1);
+}
+
+int			read_core(char **buff, char **str, int enable)
+{
+	size_t	i[2];
 
 	i[0] = 0;
 	i[1] = 0;
-	
 	if (*str != NULL)
-		i[1] = ft_strlen(*str);	
+		i[1] = ft_strlen(*str);
+	if (!str_swaper(buff, str, (i[1] + BUFF_SIZE), enable))
+		return (-1);
 	while (buff[0][i[0]] != '\0')
 	{
 		if (buff[0][i[0]] == '\n')
 		{
+			str[i[1]] = '\0';
 			i[1] = 0;
 			while (buff[0][++i[0]] != '\0')
 				buff[0][i[1]++] = buff[0][i[0]];
 			buff[0][i[1]] = '\0';
-			ft_putendl(*buff);
 			return (RETURN_LINE);
-		} 
+		}
 		str[0][i[1]++] = buff[0][i[0]++];
-
 	}
 	str[0][i[1]] = '\0';
 	return (2);
@@ -44,20 +61,18 @@ int			string_swaper(char **buff, char **str)
 int					get_next_line(int fd, char **line)
 {
 	static char		*buff;
+	int				rcheck;
 
-	if (buff != NULL && (string_swaper(&buff, line) == RETURN_LINE))
-	{
+	if (buff != NULL && (read_core(&buff, line, 0) == 1))
 			return (RETURN_LINE);
-	}
 	else if (buff == NULL)
-	{
 		buff = ft_strnew(BUFF_SIZE + 1);
-		*line = ft_strnew(BUFF_SIZE + 1);
-	}
 	while (read(fd, buff, BUFF_SIZE) > 0)
 	{ 
-		if (string_swaper(&buff, line) == RETURN_LINE)
+		if ((rcheck = read_core(&buff, line, 1)) == 1)
 			return (RETURN_LINE);
+		else if (rcheck == -1)
+			return (-1);
 	}
 	return (0);
 }
@@ -69,6 +84,7 @@ int			main(int ac, char const **av)
 	char	*line;
 
 	i = 0;
+	line = NULL;
 	if (ac == 1)
 		ft_putendl("\033[91mError: file required !");
 	else
@@ -77,13 +93,12 @@ int			main(int ac, char const **av)
 		else
 			while (get_next_line(fd, &line) == 1)
 			{
-				ft_putstr("\033[94m####### APPEL ");
-				ft_putnbr(++i);
-				ft_putendl(" #######");
-				ft_putstr("\033[92m");
+				//ft_putstr("\033[92m###### APPEL ");
+				//ft_putnbr(++i);
+				//ft_putendl(" ######\033[0m");
 				ft_putendl(line);
-
-				
+				free(line);
+				line = NULL;
 			}
 	return (0);
 }
